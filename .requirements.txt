@@ -1,0 +1,12 @@
+streamlit
+openai
+ultralytics
+opencv-python-headless
+numpy
+pandas
+shapely
+pillow
+openpyxl
+matplotlib
+scipy
+google-genai
