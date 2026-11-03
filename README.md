@@ -1,44 +1,37 @@
 # 도로 위험요소 자동 신고 시스템
 
-미래인재대학 학술제 · 4NOVA 팀 · 덕성여자대학교
+미래인재대학 학술제 · 4NOVA 팀 (덕성여자대학교)
 
-도로 사진에서 균열과 포트홀을 인식해 민원문을 생성하는 신고 지원 시스템이다. 시스템에 쓰이는 비전언어모델(VLM)의 유형·심각도 판정 신뢰성을 300장의 테스트셋으로 평가하고(HyperCLOVA X, Gemini), YOLOv8-seg로 예측한 파손 면적 비율에 따라 일반·보통·긴급 3단계 처리 우선순위를 산출한다. 서비스에는 HyperCLOVA X(HCX-005)를 연동하였고, Streamlit 웹 프로토타입으로 구현하였다.
+도로 사진에서 균열과 포트홀을 인식하고, 파손 면적에 따라 처리 우선순위를 정해 민원문을 만들어 주는 신고 지원 시스템이다. 비전언어모델(HyperCLOVA X, Gemini)의 판정 신뢰성을 300장의 사진으로 평가하였고, 평가 결과에 따라 서비스에는 HyperCLOVA X를 연결하였다. 파손 위치와 면적은 YOLOv8-seg로 구하며, 면적 비율이 2% 미만이면 일반, 5% 미만이면 보통, 그 이상이면 긴급으로 나눈다. 전체는 Streamlit 웹 앱으로 구현하였다.
 
-## 폴더 구조
+## 폴더
 
-| 폴더 | 내용 |
-|---|---|
-| `app/` | Streamlit 프로토타입(`app.py`) |
-| `vlm_eval/` | VLM 예비 비교(30장)와 확대 평가(300장), 평가 함수 |
-| `area/` | 라벨 기반 파손 면적 비율 계산, 분포 그래프 |
-| `yolo/` | YOLOv8-seg 학습·검증 노트북, 학습 결과 곡선 |
-| `results/` | VLM 평가 결과, 채점 기록, 최종 표·그래프 |
-| `data_info/` | 학습/검증 분할 기록(`sampling.json`) |
-| `docs/` | 논문, 발표 자료 |
+- `app/` : Streamlit 웹 앱
+- `vlm_eval/` : VLM 평가 코드
+- `area/` : 파손 면적 비율 계산
+- `yolo/` : YOLOv8-seg 학습과 검증
+- `results/` : 평가 결과와 최종 표·그래프
+- `data_info/` : 학습·검증 분할 기록
+- `docs/` : 논문과 발표 자료
 
-## 실행 방법
+## 실행
 
 ```bash
 pip install -r requirements.txt
 streamlit run app/app.py
 ```
 
-- 앱의 위치 검출은 학습한 YOLO 가중치(`best.pt`)가 필요하다. 가중치 파일은 용량 때문에 저장소에 포함하지 않았으며, `app/app.py`의 `MODEL_PATH`에 경로를 지정한다.
-- HyperCLOVA X(CLOVA Studio) API 키는 앱 화면에서 입력한다. 키가 없으면 가짜 데이터로 동작한다.
+위치 검출에는 학습한 가중치 파일(`best.pt`)이 필요하다. 용량 때문에 저장소에는 넣지 않았고, `app/app.py`의 `MODEL_PATH`에 경로를 지정하면 된다. HyperCLOVA X API 키는 앱 화면에서 입력하며, 키가 없으면 가짜 데이터로 동작한다.
 
 ## 데이터
 
-AI Hub의 「지자체 도로 정비 AI 데이터(CASE1 도로)」(TL01 라벨)를 사용하였다. 이용 약관상 재배포가 불가하여 원본 이미지와 라벨은 저장소에 포함하지 않았다. AI Hub(https://aihub.or.kr)에서 직접 내려받아 사용한다.
+AI Hub의 지자체 도로 정비 AI 데이터(CASE1 도로)를 사용하였다. 재배포가 허용되지 않아 원본 사진과 라벨은 포함하지 않았으며, [AI Hub](https://aihub.or.kr)에서 내려받아야 한다.
 
-## 환경변수 (평가 노트북 실행 시)
+## 환경변수
 
-키 값은 저장소에 올리지 않는다. 아래 이름으로 환경변수에 설정하고 노트북에서 `os.environ`으로 읽는다.
+평가 노트북을 실행하려면 아래 키를 환경변수로 설정한다. 키 값은 저장소에 올리지 않았다.
 
-| 이름 | 용도 |
-|---|---|
-| `CLOVA_API_KEY` | HyperCLOVA X(CLOVA Studio) |
-| `GEMINI_API_KEY` | Gemini |
-| `OPENROUTER_API_KEY` | GPT-4o, Qwen, Claude (예비 비교) |
+`CLOVA_API_KEY`, `GEMINI_API_KEY`, `OPENROUTER_API_KEY`
 
 ## 팀
 
