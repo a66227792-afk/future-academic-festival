@@ -25,7 +25,7 @@ YOLOv8m-seg 최종 모델의 마스크 mAP50은 0.714(균열 0.574, 포트홀 0.
 ## 실행
 
 ```bash
-pip install -r requirements.txt
+pip install -r app/requirements.txt
 streamlit run app/app.py
 ```
 
